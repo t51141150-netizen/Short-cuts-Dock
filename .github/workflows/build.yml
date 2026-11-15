@@ -1,0 +1,24 @@
+# Builds ShortcutDock.exe on a free Windows machine at GitHub, so nothing has to be
+# installed on your own PC. Save this file in your repository as:
+#     .github/workflows/build.yml
+name: Build ShortcutDock
+
+on:
+  workflow_dispatch:        # adds a "Run workflow" button in the Actions tab
+  push:
+    branches: [main]        # also builds whenever you upload a new shortcut_dock.py
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # shortcut_dock.py --build installs PyInstaller etc. and writes ShortcutDock.exe
+      - run: python shortcut_dock.py --build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ShortcutDock
+          path: ShortcutDock.exe
